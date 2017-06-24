@@ -1,6 +1,7 @@
-# jenkins-jmh
+# Jenkins JMH Report Plugin
 
 Visually explore your [JMH](http://openjdk.java.net/projects/code-tools/jmh/) benchmarks on [Jenkins](https://jenkins.io/)!
+
 Based on [JMH Visualizer](http://jmh.morethan.io). 
 
 # Building the project
