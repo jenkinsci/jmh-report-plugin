@@ -13,6 +13,7 @@ import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Action;
 import hudson.model.BuildListener;
+import hudson.model.Result;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
@@ -36,25 +37,27 @@ public class RunPublisher extends Recorder {
 	public boolean perform(AbstractBuild<?, ?> run, Launcher launcher, BuildListener listener)
 			throws InterruptedException, IOException {
 
-		FilePath resultFile = run.getWorkspace().child(_resultPath);
-		if (!resultFile.exists()) {
-			listener.error("Could not find JMH result at: " + _resultPath);
-			return false;
+		if (run.getResult() == Result.SUCCESS || run.getResult() == Result.UNSTABLE) {
+			FilePath resultFile = run.getWorkspace().child(_resultPath);
+			if (!resultFile.exists()) {
+				listener.error("Could not find JMH result at: " + _resultPath);
+				return false;
+			}
+
+			listener.getLogger().println("Found JMH result: " + _resultPath);
+
+			// Storing the result file in the run dir
+			File archivedResult = new File(run.getRootDir(), Constants.ARCHIVED_RESULT_FILE);
+			resultFile.copyTo(new FilePath(archivedResult));
+			listener.getLogger().println("Archived JMH result to: " + archivedResult);
+			// TODO use this one
+			// _run.getArtifactManager().
+
+			run.addAction(new ShowSingleRun(run));
+			// TODO set on major decreases ?
+			// build.setResult(Result.UNSTABLE);
 		}
 
-		listener.getLogger().println("Found JMH result: " + _resultPath);
-
-		// Storing the result file in the run dir
-		File archivedResult = new File(run.getRootDir(), Constants.ARCHIVED_RESULT_FILE);
-		resultFile.copyTo(new FilePath(archivedResult));
-		listener.getLogger().println("Archived JMH result to: " + archivedResult);
-		// TODO use this one
-		// _run.getArtifactManager().
-
-		run.addAction(new ShowSingleRun(run));
-
-		// TODO set on major decreases ?
-		// build.setResult(Result.UNSTABLE);
 		return true;
 
 	}
