@@ -2,7 +2,6 @@ package io.morethan.jenkins.jenkinsjmh;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.Collection;
 
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -52,13 +51,12 @@ public class RunPublisher extends Recorder {
 		// TODO use this one
 		// _run.getArtifactManager().
 
-		System.out.println("seria?: " + (run instanceof Serializable));
-
-		run.addAction(new ShowSingleRun(run.getProject().getName(), run.getNumber(), archivedResult));
+		run.addAction(new ShowSingleRun(run));
 
 		// TODO set on major decreases ?
 		// build.setResult(Result.UNSTABLE);
 		return true;
+
 	}
 
 	@Override

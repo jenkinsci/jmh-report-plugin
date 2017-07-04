@@ -14,22 +14,19 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import com.google.common.io.LineProcessor;
 
-import hudson.model.Action;
+import hudson.model.*;
 
 public class ShowSingleRun implements Action, Serializable {
 
+	
 	private static final long serialVersionUID = 1L;
 
 	protected static final String ICON_NAME = Constants.PLUGIN_PATH + "/icon.png";
 
-	private final String _projectName;
-	private final int _buildNumber;
-	private final File _jmhResultFile;
+	private final AbstractBuild<?, ?> _run;
 
-	public ShowSingleRun(String projectName, int buildNumber, File jmhResultFile) {
-		_projectName = projectName;
-		_buildNumber = buildNumber;
-		_jmhResultFile = jmhResultFile;
+	public ShowSingleRun(AbstractBuild<?, ?> run) {
+		_run = run;
 	}
 
 	/**
@@ -54,11 +51,11 @@ public class ShowSingleRun implements Action, Serializable {
 	}
 
 	public String getProjectName() {
-		return _projectName;
+		return _run.getProject().getName();
 	}
 
 	public int getBuildNumber() {
-		return _buildNumber;
+		return _run.getNumber();
 	}
 
 	// TODO add increase/decrease to summary
@@ -78,16 +75,45 @@ public class ShowSingleRun implements Action, Serializable {
 
 	public void doDynamic(final StaplerRequest request, final StaplerResponse response)
 			throws IOException, ServletException {
-		// String fileName = new File(request.getPathInfo()).getName();
-		// System.out.println("fileName: " + fileName);
+		File resultFile = new File(_run.getRootDir(), Constants.ARCHIVED_RESULT_FILE);
+
+		AbstractBuild<?, ?> previousSuccessfulBuild = _run.getPreviousSuccessfulBuild();
+		File previousResultFile = null;
+		boolean havePreviousResult = false;
+		if (previousSuccessfulBuild != null) {
+			previousResultFile = new File(previousSuccessfulBuild.getRootDir(), Constants.ARCHIVED_RESULT_FILE);
+			havePreviousResult = previousResultFile.exists();
+		}
 
 		final StringBuilder builder = new StringBuilder();
-		builder.append("var providedBenchmarks = [" + getBuildNumber() + "];");
+		if (havePreviousResult) {
+			builder.append("var providedBenchmarks = [" + (previousSuccessfulBuild.getNumber()) + "," + getBuildNumber()
+					+ "];");
+		} else {
+			builder.append("var providedBenchmarks = [" + getBuildNumber() + "];");
+		}
 		builder.append("\n");
 		builder.append("var providedBenchmarkStore = {");
 		builder.append("\n");
+		if (havePreviousResult) {
+			builder.append((previousSuccessfulBuild.getNumber()) + ": ");
+			Files.readLines(previousResultFile, Charsets.UTF_8, new LineProcessor<Void>() {
+				@Override
+				public boolean processLine(String line) throws IOException {
+					builder.append(line);
+					return true;
+				}
+
+				@Override
+				public Void getResult() {
+					return null;
+				}
+			});
+			builder.append(",\n");
+		}
+
 		builder.append(getBuildNumber() + ": ");
-		Files.readLines(_jmhResultFile, Charsets.UTF_8, new LineProcessor<Void>() {
+		Files.readLines(resultFile, Charsets.UTF_8, new LineProcessor<Void>() {
 			@Override
 			public boolean processLine(String line) throws IOException {
 				builder.append(line);
