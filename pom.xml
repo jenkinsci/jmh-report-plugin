@@ -16,10 +16,7 @@
 
   <properties>
     <!-- Baseline Jenkins version you use to build the plugin. Users must have this version or newer to run. -->
-    
-    <jenkins.version>2.6</jenkins.version>
-    <!-- <jenkins.version>1.625.3</jenkins.version> -->
-     
+    <jenkins.version>2.0</jenkins.version>
     <!-- Other properties you may want to use:
          ~ java.level: set to 6 if your jenkins.version <= 1.611
          ~ jenkins-test-harness.version: Jenkins Test Harness version you use to test the plugin. For Jenkins version >= 1.580.1 use JTH 2.0 or higher.
@@ -31,8 +28,6 @@
   <name>JMH Report</name>
   <description>Report for JMH benchmarks</description>
   <url>https://github.com/jzillmann/jenkins-jmh</url>
-
-  <!-- The default licence for Jenkins OSS Plugins is MIT. Substitute for the applicable one if needed. -->
 
   <licenses>
     <license>
@@ -62,14 +57,5 @@
       <url>https://repo.jenkins-ci.org/public/</url>
     </pluginRepository>
   </pluginRepositories>
-  <!-- If you want to depend on other plugins:
-  <dependencies>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins</groupId>
-      <artifactId>credentials</artifactId>
-      <version>2.0</version>
-    </dependency>
-  </dependencies>
-  -->
 
 </project>
