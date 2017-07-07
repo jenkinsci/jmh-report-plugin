@@ -1,0 +1,10 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
+    <l:layout title="JMH ${it.project.name}" type="one-column">
+        <l:main-panel>
+            <div id="main"></div>
+        </l:main-panel>
+    </l:layout>
+    <script language="javascript" type="text/javascript" src="${it.getProvidedJsUrl()}"></script>
+    <script language="javascript" type="text/javascript" src="${rootURL}/jenkins/plugin/jenkins-jmh/bundle.js"></script>
+</j:jelly>

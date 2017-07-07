@@ -1,6 +1,6 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
-    <l:layout title="JMH #${it.run.number}" type="one-column">
+    <l:layout title="JMH #${it.buildNumber}" type="one-column">
         <l:main-panel>
             <div id="main"></div>
         </l:main-panel>

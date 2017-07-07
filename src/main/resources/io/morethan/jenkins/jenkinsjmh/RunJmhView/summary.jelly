@@ -1,3 +1,4 @@
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:st="jelly:stapler">
     <t:summary icon="${it.iconFileName}">
         <div>Show <a href="${it.urlName}">Report</a></div>

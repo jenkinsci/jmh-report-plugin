@@ -2,6 +2,7 @@ package io.morethan.jenkins.jenkinsjmh;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -19,6 +20,9 @@ import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 
+/**
+ * A {@link Recorder} executed after each build.
+ */
 public class RunPublisher extends Recorder {
 
 	private final String _resultPath;
@@ -53,7 +57,7 @@ public class RunPublisher extends Recorder {
 			// TODO use this one
 			// _run.getArtifactManager().
 
-			run.addAction(new ShowSingleRun(run));
+			run.addAction(new RunJmhView(run));
 			// TODO set on major decreases ?
 			// build.setResult(Result.UNSTABLE);
 		}
@@ -69,8 +73,7 @@ public class RunPublisher extends Recorder {
 
 	@Override
 	public Collection<? extends Action> getProjectActions(AbstractProject<?, ?> project) {
-		// TODO Auto-generated method stub
-		return super.getProjectActions(project);
+		return Arrays.asList(new ProjectJmhView(project));
 	}
 
 	@Extension
