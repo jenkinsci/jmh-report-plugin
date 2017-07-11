@@ -1,6 +1,7 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
-    <l:layout title="JMH ${it.project.name}" type="one-column">
+    <l:layout title="JMH ${it.project.name}" type="one-column" norefresh="true">
+        <st:include it="${it.project}" page="sidepanel.jelly" />
         <l:main-panel>
             <div id="main"></div>
         </l:main-panel>

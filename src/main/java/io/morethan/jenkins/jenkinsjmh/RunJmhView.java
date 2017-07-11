@@ -50,6 +50,10 @@ public class RunJmhView implements Action, Serializable {
 		return "jmh-run-report";
 	}
 
+	public AbstractBuild<?, ?> getRun() {
+		return _run;
+	}
+
 	public String getProjectName() {
 		return _run.getProject().getName();
 	}
