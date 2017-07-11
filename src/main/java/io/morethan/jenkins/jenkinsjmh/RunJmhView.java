@@ -17,7 +17,9 @@ import hudson.model.Action;
  * The {@link Action} responsible for displaying the JMH report page for a
  * certain run.
  * 
- * @see corresponding Jelly files under src/main/resources
+ * <p>
+ * See corresponding Jelly files under src/main/resources.
+ * </p>
  */
 public class RunJmhView implements Action, Serializable {
 
