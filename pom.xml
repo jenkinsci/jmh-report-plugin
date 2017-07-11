@@ -11,7 +11,7 @@
   </parent>
   <groupId>io.morethan.jenkins</groupId>
   <artifactId>jenkins-jmh</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.4.2</version>
   <packaging>hpi</packaging>
 
   <properties>
@@ -26,7 +26,7 @@
   </properties>
 
   <name>JMH Report</name>
-  <description>Report for JMH benchmarks</description>
+  <description>Report for your JMH benchmarks</description>
   <url>https://github.com/jzillmann/jenkins-jmh</url>
 
   <licenses>
