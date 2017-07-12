@@ -1,4 +1,4 @@
-package io.morethan.jenkins.jenkinsjmh;
+package io.morethan.jmh.jenkport;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +22,8 @@ import hudson.model.Action;
  * </p>
  */
 public class RunJmhView implements Action, Serializable {
+
+	private static final String URL_NAME = "jmh-run-report";
 
 	private static final long serialVersionUID = 1L;
 
@@ -49,7 +51,7 @@ public class RunJmhView implements Action, Serializable {
 
 	@Override
 	public String getUrlName() {
-		return "jmh-run-report";
+		return URL_NAME;
 	}
 
 	public AbstractBuild<?, ?> getRun() {
@@ -70,8 +72,8 @@ public class RunJmhView implements Action, Serializable {
 	public String getProvidedJsUrl() {
 		String contextPath = Stapler.getCurrentRequest().getContextPath();
 		return new StringBuilder(contextPath).append("/job/").append(getProjectName()).append('/')
-				.append(getBuildNumber()).append("/jmh-run-report/provided-").append(getBuildNumber()).append(".js")
-				.toString();
+				.append(getBuildNumber()).append('/').append(URL_NAME).append("/provided-").append(getBuildNumber())
+				.append(".js").toString();
 	}
 
 	public String getBundleJsUrl() {

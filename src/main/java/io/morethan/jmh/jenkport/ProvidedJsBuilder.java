@@ -1,4 +1,4 @@
-package io.morethan.jenkins.jenkinsjmh;
+package io.morethan.jmh.jenkport;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,7 +60,9 @@ public class ProvidedJsBuilder {
 			builder.append("  '").append(run).append("',");
 			builder.append(NEWLINE);
 		}
-		deleteLastChars(builder, 2);
+		if (runNames.size() > 0) {
+			deleteLastChars(builder, 2);
+		}
 		builder.append(NEWLINE);
 		builder.append("];");
 		builder.append(NEWLINE);
@@ -72,7 +74,9 @@ public class ProvidedJsBuilder {
 			deleteLastChars(builder, 1);
 			builder.append(",").append(NEWLINE);
 		}
-		deleteLastChars(builder, 2);
+		if (runNames.size() > 0) {
+			deleteLastChars(builder, 2);
+		}
 
 		builder.append(NEWLINE).append("}");
 		return builder.toString();

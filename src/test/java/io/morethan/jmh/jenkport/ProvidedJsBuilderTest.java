@@ -1,4 +1,4 @@
-package io.morethan.jenkins.jenkinsjmh;
+package io.morethan.jmh.jenkport;
 
 import static org.junit.Assert.assertEquals;
 
@@ -17,6 +17,14 @@ public class ProvidedJsBuilderTest {
 
 	@Rule
 	public TemporaryFolder _tempFolder = new TemporaryFolder();
+
+	@Test
+	public void testEmpty() throws URISyntaxException, IOException {
+		String providedJs = new ProvidedJsBuilder().build();
+		System.out.println(providedJs);
+		assertEquals("var providedBenchmarks = [\n" + "\n" + "];\n" + "var providedBenchmarkStore = {\n" + "\n" + "}",
+				providedJs);
+	}
 
 	@Test
 	public void test() throws URISyntaxException, IOException {

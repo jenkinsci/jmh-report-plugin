@@ -1,4 +1,4 @@
-package io.morethan.jenkins.jenkinsjmh;
+package io.morethan.jmh.jenkport;
 
 import java.io.File;
 import java.io.IOException;

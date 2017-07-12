@@ -4,6 +4,9 @@ Visually explore your [JMH](http://openjdk.java.net/projects/code-tools/jmh/) be
 
 Based on [JMH Visualizer](http://jmh.morethan.io). 
 
+Given your project runs JMH benchmarks, you can use this plugin to visualize the results of it. 
+The results need to be stored in JSON therefore.
+
 # Building the project
 
 - Setup project for eclipse: ```mvn -DdownloadSources=true eclipse:eclipse ```

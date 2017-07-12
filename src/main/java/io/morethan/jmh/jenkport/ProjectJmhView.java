@@ -1,4 +1,4 @@
-package io.morethan.jenkins.jenkinsjmh;
+package io.morethan.jmh.jenkport;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +10,7 @@ import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
+import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Action;
 import hudson.model.Result;
@@ -24,6 +25,8 @@ import hudson.model.Run;
  * </p>
  */
 public class ProjectJmhView implements Action, Serializable {
+
+	private static final String URL_NAME = "jmh-report";
 
 	private static final long serialVersionUID = 1L;
 
@@ -45,7 +48,7 @@ public class ProjectJmhView implements Action, Serializable {
 
 	@Override
 	public String getUrlName() {
-		return "jmh-report";
+		return URL_NAME;
 	}
 
 	public AbstractProject<?, ?> getProject() {
@@ -54,9 +57,10 @@ public class ProjectJmhView implements Action, Serializable {
 
 	public String getProvidedJsUrl() {
 		String contextPath = Stapler.getCurrentRequest().getContextPath();
+		AbstractBuild<?, ?> lastSuccessfulBuild = getProject().getLastSuccessfulBuild();
+		String providedId = lastSuccessfulBuild == null ? "none" : Integer.toString(lastSuccessfulBuild.getNumber());
 		return new StringBuilder(contextPath).append("/job/").append(getProject().getName()).append('/')
-				.append("/jmh-report/provided-").append(getProject().getLastSuccessfulBuild().getNumber()).append(".js")
-				.toString();
+				.append(URL_NAME).append("/provided-").append(providedId).append(".js").toString();
 	}
 
 	public void doDynamic(final StaplerRequest request, final StaplerResponse response)
@@ -66,10 +70,12 @@ public class ProjectJmhView implements Action, Serializable {
 		for (Run run : _project.getBuilds()) {
 			if (run.getResult() == Result.SUCCESS || run.getResult() == Result.UNSTABLE) {
 				File reportFile = new File(run.getRootDir(), Constants.ARCHIVED_RESULT_FILE);
-				jsBuilder.addRun(Integer.toString(run.getNumber()), reportFile);
-				addedReports++;
-				if (addedReports == 2) {
-					break;
+				if (reportFile.exists()) {
+					jsBuilder.addRun(Integer.toString(run.getNumber()), reportFile);
+					addedReports++;
+					if (addedReports == 2) {
+						break;
+					}
 				}
 			}
 		}

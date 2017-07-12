@@ -1,8 +1,8 @@
-package io.morethan.jenkins.jenkinsjmh;
+package io.morethan.jmh.jenkport;
 
 public interface Constants {
 
-	String PLUGIN_NAME = "jenkins-jmh";
+	String PLUGIN_NAME = "jmh-jenkport";
 	String PLUGIN_PATH = "/plugin/" + Constants.PLUGIN_NAME;
 
 	String ARCHIVED_RESULT_FILE = "jmh-report.json";
