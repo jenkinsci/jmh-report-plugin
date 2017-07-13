@@ -7,6 +7,9 @@ Based on [JMH Visualizer](http://jmh.morethan.io).
 Given your project runs JMH benchmarks, you can use this plugin to visualize the results of it. 
 The results need to be stored in JSON therefore.
 
+[![Build Status](https://ci.jenkins.io/buildStatus/icon?job=Plugins/jmh-report-plugin/master)](https://ci.jenkins.io/job/Plugins/job/jmh-report-plugin/job/master/)
+
+
 # Building the project
 
 - Setup project for eclipse: ```mvn -DdownloadSources=true eclipse:eclipse ```
