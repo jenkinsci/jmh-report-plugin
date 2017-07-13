@@ -1,4 +1,4 @@
-package io.morethan.jmh.jenkport;
+package io.morethan.jenkins.jmhreport;
 
 import java.io.File;
 import java.io.IOException;

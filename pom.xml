@@ -10,7 +10,7 @@
     <relativePath/>
   </parent>
   <groupId>io.morethan.jenkins</groupId>
-  <artifactId>jmh-jenkport</artifactId>
+  <artifactId>jmh-report</artifactId>
   <version>0.4.2</version>
   <packaging>hpi</packaging>
 
@@ -27,7 +27,7 @@
 
   <name>JMH Report</name>
   <description>Report for your JMH benchmarks</description>
-  <url>https://github.com/jzillmann/jmh-jenkport</url>
+  <url>https://github.com/jzillmann/jmh-report</url>
 
   <licenses>
     <license>
