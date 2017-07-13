@@ -110,10 +110,4 @@ public class ProvidedJsBuilder {
 		}
 	}
 
-	// TODO write junit test
-	public static void main(String[] args) {
-		String providedJs = new ProvidedJsBuilder().addRun("1", new File("/Users/jz/Desktop/gcExample.json"))
-				.addRun("2", new File("/Users/jz/Desktop/gcExample.json")).build();
-		System.out.println(providedJs);
-	}
 }
