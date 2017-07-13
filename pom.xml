@@ -27,7 +27,7 @@
 
   <name>JMH Report</name>
   <description>Report for your JMH benchmarks</description>
-  <url>https://github.com/jzillmann/jmh-report</url>
+  <url>https://wiki.jenkins.io/display/JENKINS/JMH+Report+Plugin</url>
 
   <licenses>
     <license>
@@ -36,15 +36,13 @@
     </license>
   </licenses>
 
-  <!-- If you want this to appear on the wiki page:
   <developers>
     <developer>
-      <id>bhacker</id>
-      <name>Bob Q. Hacker</name>
-      <email>bhacker@nowhere.net</email>
+      <id>oae</id>
+      <name>Johannes Zillmann</name>
     </developer>
   </developers>
-  -->
+
   <repositories>
     <repository>
       <id>repo.jenkins-ci.org</id>
