@@ -29,6 +29,10 @@
   <name>JMH Report</name>
   <description>Report for your JMH benchmarks</description>
   <url>https://wiki.jenkins.io/display/JENKINS/JMH+Report+Plugin</url>
+  
+   <scm>
+     <developerConnection>scm:git:git@github.com:jenkinsci/jmh-report-plugin.git</developerConnection>
+   </scm>
 
   <licenses>
     <license>
