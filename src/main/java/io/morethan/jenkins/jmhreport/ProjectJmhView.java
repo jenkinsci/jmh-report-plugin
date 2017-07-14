@@ -55,6 +55,10 @@ public class ProjectJmhView implements Action, Serializable {
 		return _project;
 	}
 
+	public String getContextPath() {
+		return Stapler.getCurrentRequest().getContextPath();
+	}
+
 	public String getProvidedJsUrl() {
 		String contextPath = Stapler.getCurrentRequest().getContextPath();
 		AbstractBuild<?, ?> lastSuccessfulBuild = getProject().getLastSuccessfulBuild();

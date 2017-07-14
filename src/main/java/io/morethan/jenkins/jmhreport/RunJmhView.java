@@ -66,8 +66,9 @@ public class RunJmhView implements Action, Serializable {
 		return _run.getNumber();
 	}
 
-	// TODO add increase/decrease to summary
-	// TODO add number of benchmarks, added, removed to summary
+	public String getContextPath() {
+		return Stapler.getCurrentRequest().getContextPath();
+	}
 
 	public String getProvidedJsUrl() {
 		String contextPath = Stapler.getCurrentRequest().getContextPath();
