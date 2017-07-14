@@ -10,7 +10,7 @@
   </parent>
   <groupId>io.morethan.jenkins</groupId>
   <artifactId>jmh-report</artifactId>
-  <version>0.4.3.1-SNAPSHOT</version>
+  <version>0.4.3.1</version>
   <packaging>hpi</packaging>
 
   <properties>
@@ -30,7 +30,7 @@
   
    <scm>
      <developerConnection>scm:git:git@github.com:jenkinsci/jmh-report-plugin.git</developerConnection>
-     <tag>HEAD</tag>
+     <tag>jmh-report-0.4.3.1</tag>
   </scm>
 
   <licenses>
