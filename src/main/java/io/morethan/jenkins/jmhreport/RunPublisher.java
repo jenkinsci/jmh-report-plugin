@@ -2,28 +2,28 @@ package io.morethan.jenkins.jmhreport;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
 
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
+import hudson.AbortException;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
-import hudson.model.Action;
-import hudson.model.BuildListener;
 import hudson.model.Result;
+import hudson.model.Run;
+import hudson.model.TaskListener;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
+import jenkins.tasks.SimpleBuildStep;
 
 /**
  * A {@link Recorder} executed after each build.
  */
-public class RunPublisher extends Recorder {
+public class RunPublisher extends Recorder implements SimpleBuildStep {
 
 	private final String _resultPath;
 
@@ -32,38 +32,42 @@ public class RunPublisher extends Recorder {
 		_resultPath = resultPath;
 	}
 
+	public String getResultPath() {
+		return _resultPath;
+	}
+
 	@Override
 	public BuildStepMonitor getRequiredMonitorService() {
 		return BuildStepMonitor.NONE;
 	}
 
 	@Override
-	public boolean perform(AbstractBuild<?, ?> run, Launcher launcher, BuildListener listener)
+	public void perform(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener)
 			throws InterruptedException, IOException {
+		if (run.getResult() == Result.ABORTED || run.getResult() == Result.FAILURE
+				|| run.getResult() == Result.NOT_BUILT) {
+			listener.getLogger().println("Skipping JMH-Report...");
+			return;
+		}
+		listener.getLogger().println("Executing JMH-Report...");
 
-		if (run.getResult() == Result.SUCCESS || run.getResult() == Result.UNSTABLE) {
-			FilePath resultFile = run.getWorkspace().child(_resultPath);
-			if (!resultFile.exists()) {
-				listener.error("Could not find JMH result at: " + _resultPath);
-				return false;
-			}
-
-			listener.getLogger().println("Found JMH result: " + _resultPath);
-
-			// Storing the result file in the run dir
-			File archivedResult = new File(run.getRootDir(), Constants.ARCHIVED_RESULT_FILE);
-			resultFile.copyTo(new FilePath(archivedResult));
-			listener.getLogger().println("Archived JMH result to: " + archivedResult);
-			// TODO use this one
-			// _run.getArtifactManager().
-
-			run.addAction(new RunJmhView(run));
-			// TODO set on major decreases ?
-			// build.setResult(Result.UNSTABLE);
+		FilePath resultFile = workspace.child(_resultPath);
+		if (!resultFile.exists()) {
+			throw new AbortException("Could not find JMH result at: " + _resultPath);
 		}
 
-		return true;
+		listener.getLogger().println("Found JMH result: " + _resultPath);
 
+		// Storing the result file in the run dir
+		File archivedResult = new File(run.getRootDir(), Constants.ARCHIVED_RESULT_FILE);
+		resultFile.copyTo(new FilePath(archivedResult));
+		listener.getLogger().println("Archived JMH result to: " + archivedResult);
+		// TODO use this one
+		// _run.getArtifactManager().
+
+		run.addAction(new RunJmhView(run));
+		// TODO set on major decreases ?
+		// build.setResult(Result.UNSTABLE);
 	}
 
 	@Override
@@ -71,11 +75,7 @@ public class RunPublisher extends Recorder {
 		return (DescriptorImpl) super.getDescriptor();
 	}
 
-	@Override
-	public Collection<? extends Action> getProjectActions(AbstractProject<?, ?> project) {
-		return Arrays.asList(new ProjectJmhView(project));
-	}
-
+	@Symbol("jmhReport")
 	@Extension
 	public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
@@ -90,5 +90,7 @@ public class RunPublisher extends Recorder {
 		public String getDisplayName() {
 			return "JMH Report";
 		}
+
 	}
+
 }

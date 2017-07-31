@@ -3,6 +3,8 @@ package io.morethan.jenkins.jmhreport;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collection;
 
 import javax.servlet.ServletException;
 
@@ -10,8 +12,9 @@ import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
-import hudson.model.AbstractBuild;
 import hudson.model.Action;
+import hudson.model.Run;
+import jenkins.tasks.SimpleBuildStep.LastBuildAction;
 
 /**
  * The {@link Action} responsible for displaying the JMH report page for a
@@ -21,15 +24,15 @@ import hudson.model.Action;
  * See corresponding Jelly files under src/main/resources.
  * </p>
  */
-public class RunJmhView implements Action, Serializable {
+public class RunJmhView implements Action, LastBuildAction, Serializable {
 
 	private static final String URL_NAME = "jmh-run-report";
 
 	private static final long serialVersionUID = 1L;
 
-	private final AbstractBuild<?, ?> _run;
+	private final Run<?, ?> _run;
 
-	public RunJmhView(AbstractBuild<?, ?> run) {
+	public RunJmhView(Run<?, ?> run) {
 		_run = run;
 	}
 
@@ -54,12 +57,12 @@ public class RunJmhView implements Action, Serializable {
 		return URL_NAME;
 	}
 
-	public AbstractBuild<?, ?> getRun() {
+	public Run<?, ?> getRun() {
 		return _run;
 	}
 
 	public String getProjectName() {
-		return _run.getProject().getName();
+		return _run.getParent().getName();
 	}
 
 	public int getBuildNumber() {
@@ -88,7 +91,7 @@ public class RunJmhView implements Action, Serializable {
 		File resultFile = new File(_run.getRootDir(), Constants.ARCHIVED_RESULT_FILE);
 		jsBuilder.addRun(getBuildNumber(), resultFile);
 
-		AbstractBuild<?, ?> previousSuccessfulBuild = _run.getPreviousSuccessfulBuild();
+		Run<?, ?> previousSuccessfulBuild = _run.getPreviousNotFailedBuild();
 		if (previousSuccessfulBuild != null) {
 			File previousResultFile = new File(previousSuccessfulBuild.getRootDir(), Constants.ARCHIVED_RESULT_FILE);
 			if (previousResultFile.exists()) {
@@ -98,6 +101,11 @@ public class RunJmhView implements Action, Serializable {
 
 		response.setContentType("text/javascript;charset=UTF-8");
 		response.getWriter().println(jsBuilder.buildReverse());
+	}
+
+	@Override
+	public Collection<? extends Action> getProjectActions() {
+		return Arrays.asList(new ProjectJmhView(_run.getParent()));
 	}
 
 }

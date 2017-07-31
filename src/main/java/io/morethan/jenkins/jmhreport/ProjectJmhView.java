@@ -10,9 +10,8 @@ import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
 import hudson.model.Action;
+import hudson.model.Job;
 import hudson.model.Result;
 import hudson.model.Run;
 
@@ -30,9 +29,9 @@ public class ProjectJmhView implements Action, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private final AbstractProject<?, ?> _project;
+	private final Job<?, ?> _project;
 
-	public ProjectJmhView(AbstractProject<?, ?> project) {
+	public ProjectJmhView(Job<?, ?> project) {
 		_project = project;
 	}
 
@@ -51,7 +50,7 @@ public class ProjectJmhView implements Action, Serializable {
 		return URL_NAME;
 	}
 
-	public AbstractProject<?, ?> getProject() {
+	public Job<?, ?> getProject() {
 		return _project;
 	}
 
@@ -61,7 +60,7 @@ public class ProjectJmhView implements Action, Serializable {
 
 	public String getProvidedJsUrl() {
 		String contextPath = Stapler.getCurrentRequest().getContextPath();
-		AbstractBuild<?, ?> lastSuccessfulBuild = getProject().getLastSuccessfulBuild();
+		Run<?, ?> lastSuccessfulBuild = getProject().getLastSuccessfulBuild();
 		String providedId = lastSuccessfulBuild == null ? "none" : Integer.toString(lastSuccessfulBuild.getNumber());
 		return new StringBuilder(contextPath).append("/job/").append(getProject().getName()).append('/')
 				.append(URL_NAME).append("/provided-").append(providedId).append(".js").toString();
