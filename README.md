@@ -14,7 +14,9 @@ The results need to be stored in JSON therefore.
 ## As a pipeline step
 
 ```jmhReport 'build/reports/jmh/result.json'```
+
 OR
+
 ```step([$class: 'RunPublisher', resultPath: 'build/reports/jmh/result.json'])```
 
 A complete pipeline could look like that:
