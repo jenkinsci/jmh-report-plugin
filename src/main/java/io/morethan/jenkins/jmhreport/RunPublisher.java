@@ -21,7 +21,10 @@ import hudson.tasks.Recorder;
 import jenkins.tasks.SimpleBuildStep;
 
 /**
- * A {@link Recorder} executed after each build.
+ * A {@link Recorder} executed after each build. It copies the JMH result file
+ * into the corresponding build dir and registers the {@link ProjectJmhView}
+ * which renders the build run report and itself registers the
+ * {@link ProjectJmhView} through {@link LastBuildAction}.
  */
 public class RunPublisher extends Recorder implements SimpleBuildStep {
 
@@ -51,19 +54,17 @@ public class RunPublisher extends Recorder implements SimpleBuildStep {
 		}
 		listener.getLogger().println("Executing JMH-Report...");
 
+		// Lookup the JMH result file in the workspace
 		FilePath resultFile = workspace.child(_resultPath);
 		if (!resultFile.exists()) {
 			throw new AbortException("Could not find JMH result at: " + _resultPath);
 		}
-
 		listener.getLogger().println("Found JMH result: " + _resultPath);
 
-		// Storing the result file in the run dir
+		// Copy the result file into the build dir of the Jenkins project
 		File archivedResult = new File(run.getRootDir(), Constants.ARCHIVED_RESULT_FILE);
 		resultFile.copyTo(new FilePath(archivedResult));
 		listener.getLogger().println("Archived JMH result to: " + archivedResult);
-		// TODO use this one
-		// _run.getArtifactManager().
 
 		run.addAction(new RunJmhView(run));
 		// TODO set on major decreases ?
