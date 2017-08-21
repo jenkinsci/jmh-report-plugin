@@ -75,8 +75,7 @@ public class RunJmhView implements Action, LastBuildAction, Serializable {
 
 	public String getProvidedJsUrl() {
 		String contextPath = Stapler.getCurrentRequest().getContextPath();
-		return new StringBuilder(contextPath).append("/job/").append(getProjectName()).append('/')
-				.append(getBuildNumber()).append('/').append(URL_NAME).append("/provided-").append(getBuildNumber())
+		return new StringBuilder(contextPath).append("/").append(getRun().getUrl()).append(URL_NAME).append("/provided-").append(getBuildNumber())
 				.append(".js").toString();
 	}
 
