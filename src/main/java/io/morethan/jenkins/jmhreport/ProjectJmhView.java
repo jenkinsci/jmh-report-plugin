@@ -62,7 +62,7 @@ public class ProjectJmhView implements Action, Serializable {
 		String contextPath = Stapler.getCurrentRequest().getContextPath();
 		Run<?, ?> lastSuccessfulBuild = getProject().getLastSuccessfulBuild();
 		String providedId = lastSuccessfulBuild == null ? "none" : Integer.toString(lastSuccessfulBuild.getNumber());
-		return new StringBuilder(contextPath).append("/job/").append(getProject().getName()).append('/')
+		return new StringBuilder(contextPath).append("/").append(getProject().getUrl())
 				.append(URL_NAME).append("/provided-").append(providedId).append(".js").toString();
 	}
 
