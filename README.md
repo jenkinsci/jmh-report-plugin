@@ -54,3 +54,4 @@ node {
   - Upload the HPI (*target/jmh-report.hpi*) into the [local Jenkins instance](http://localhost:8080/)  
 - Commit & Push
 - Release: ```mvn release:prepare release:perform```
+- Update https://wiki.jenkins.io/display/JENKINS/JMH+Report+Plugin
