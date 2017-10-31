@@ -37,13 +37,13 @@ public class ProvidedJsBuilderTest {
 		ProvidedJsBuilder builder = new ProvidedJsBuilder().addRun("1", file1).addRun("2", file2);
 		// System.out.println(builder.build());
 		assertEquals("var providedBenchmarks = [\n" + "  '1',\n" + "  '2'\n" + "];\n"
-				+ "var providedBenchmarkStore = {\n" + "  1: [{benchmark1}],\n" + "  2: [{benchmark2}]\n" + "}",
+				+ "var providedBenchmarkStore = {\n" + "  '1': [{benchmark1}],\n" + "  '2': [{benchmark2}]\n" + "}",
 				builder.build());
 
 		// now reverse
 		// System.out.println("\nreverse:\n" + builder.buildReverse());
 		assertEquals("var providedBenchmarks = [\n" + "  '2',\n" + "  '1'\n" + "];\n"
-				+ "var providedBenchmarkStore = {\n" + "  2: [{benchmark2}],\n" + "  1: [{benchmark1}]\n" + "}",
+				+ "var providedBenchmarkStore = {\n" + "  '2': [{benchmark2}],\n" + "  '1': [{benchmark1}]\n" + "}",
 				builder.buildReverse());
 	}
 
