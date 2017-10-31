@@ -16,8 +16,7 @@ import hudson.model.Result;
 import hudson.model.Run;
 
 /**
- * The {@link Action} responsible for displaying the JMH report page on project
- * level.
+ * The {@link Action} responsible for displaying the JMH report page on project level.
  * 
  * <p>
  * See corresponding Jelly files under src/main/resources.
@@ -62,21 +61,22 @@ public class ProjectJmhView implements Action, Serializable {
 		String contextPath = Stapler.getCurrentRequest().getContextPath();
 		Run<?, ?> lastSuccessfulBuild = getProject().getLastSuccessfulBuild();
 		String providedId = lastSuccessfulBuild == null ? "none" : Integer.toString(lastSuccessfulBuild.getNumber());
-		return new StringBuilder(contextPath).append("/").append(getProject().getUrl())
-				.append(URL_NAME).append("/provided-").append(providedId).append(".js").toString();
+		return new StringBuilder(contextPath).append("/").append(getProject().getUrl()).append(URL_NAME)
+				.append("/provided-").append(providedId).append(".js").toString();
 	}
 
 	public void doDynamic(final StaplerRequest request, final StaplerResponse response)
 			throws IOException, ServletException {
 		ProvidedJsBuilder jsBuilder = new ProvidedJsBuilder();
 		int addedReports = 0;
-		for (Run run : _project.getBuilds()) {
+		for (Run<?, ?> run : _project.getBuilds()) {
 			if (run.getResult() == Result.SUCCESS || run.getResult() == Result.UNSTABLE) {
 				File reportFile = new File(run.getRootDir(), Constants.ARCHIVED_RESULT_FILE);
 				if (reportFile.exists()) {
 					jsBuilder.addRun(Integer.toString(run.getNumber()), reportFile);
 					addedReports++;
-					if (addedReports == 2) {
+					if (addedReports == 50) {
+						// TODO make this configurable
 						break;
 					}
 				}

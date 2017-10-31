@@ -25,9 +25,6 @@ public class ProvidedJsBuilder {
 	}
 
 	public ProvidedJsBuilder addRun(String name, File reportFile) {
-		if (_runNames.size() >= 2) {
-			throw new UnsupportedOperationException("Report on more then 2 file is not (yet) supported!");
-		}
 		_runNames.add(name);
 		_reportFiles.add(reportFile);
 		return this;
@@ -35,8 +32,7 @@ public class ProvidedJsBuilder {
 
 	// TODO think the logic in jmh-visualizer should change.. to newest first
 	/**
-	 * Same as {@link #build()} but with the reports in reverse order. Helpful in
-	 * case you filled the builder with the newest entry first.
+	 * Same as {@link #build()} but with the reports in reverse order. Helpful in case you filled the builder with the newest entry first.
 	 * 
 	 * @return provided.js as String
 	 */
@@ -69,7 +65,7 @@ public class ProvidedJsBuilder {
 
 		builder.append("var providedBenchmarkStore = {").append(NEWLINE);
 		for (int i = 0; i < runNames.size(); i++) {
-			builder.append("  ").append(runNames.get(i)).append(": ");
+			builder.append("  '").append(runNames.get(i)).append("': ");
 			appendFile(builder, reportFiles.get(i));
 			deleteLastChars(builder, 1);
 			builder.append(",").append(NEWLINE);
