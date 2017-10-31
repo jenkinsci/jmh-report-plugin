@@ -17,8 +17,7 @@ import hudson.model.Run;
 import jenkins.tasks.SimpleBuildStep.LastBuildAction;
 
 /**
- * The {@link Action} responsible for displaying the JMH report page for a
- * certain run.
+ * The {@link Action} responsible for displaying the JMH report page for a certain run.
  * 
  * <p>
  * See corresponding Jelly files under src/main/resources.
@@ -37,10 +36,8 @@ public class RunJmhView implements Action, LastBuildAction, Serializable {
 	}
 
 	/**
-	 * The three functions
-	 * {@link #getIconFileName()},{@link #getDisplayName()},{@link #getUrlName()}
-	 * creating a link to a new page with url : http://{root}/job/{job
-	 * name}/{irlName} for the page of the build.
+	 * The three functions {@link #getIconFileName()},{@link #getDisplayName()},{@link #getUrlName()} creating a link to a new page with url :
+	 * http://{root}/job/{job name}/{irlName} for the page of the build.
 	 */
 	@Override
 	public String getIconFileName() {
@@ -75,8 +72,8 @@ public class RunJmhView implements Action, LastBuildAction, Serializable {
 
 	public String getProvidedJsUrl() {
 		String contextPath = Stapler.getCurrentRequest().getContextPath();
-		return new StringBuilder(contextPath).append("/").append(getRun().getUrl()).append(URL_NAME).append("/provided-").append(getBuildNumber())
-				.append(".js").toString();
+		return new StringBuilder(contextPath).append("/").append(getRun().getUrl()).append(URL_NAME)
+				.append("/provided-").append(getBuildNumber()).append(".js").toString();
 	}
 
 	public String getBundleJsUrl() {
@@ -90,16 +87,22 @@ public class RunJmhView implements Action, LastBuildAction, Serializable {
 		File resultFile = new File(_run.getRootDir(), Constants.ARCHIVED_RESULT_FILE);
 		jsBuilder.addRun(getBuildNumber(), resultFile);
 
-		Run<?, ?> previousSuccessfulBuild = _run.getPreviousNotFailedBuild();
-		if (previousSuccessfulBuild != null) {
-			File previousResultFile = new File(previousSuccessfulBuild.getRootDir(), Constants.ARCHIVED_RESULT_FILE);
-			if (previousResultFile.exists()) {
-				jsBuilder.addRun(previousSuccessfulBuild.getNumber(), previousResultFile);
-			}
-		}
+		addPossiblePreviousBuild(jsBuilder, _run);
 
 		response.setContentType("text/javascript;charset=UTF-8");
 		response.getWriter().println(jsBuilder.buildReverse());
+	}
+
+	private static void addPossiblePreviousBuild(ProvidedJsBuilder jsBuilder, Run<?, ?> run) {
+		while ((run = run.getPreviousNotFailedBuild()) != null) {
+			File previousResultFile = new File(run.getRootDir(), Constants.ARCHIVED_RESULT_FILE);
+			if (previousResultFile.exists()) {
+				jsBuilder.addRun(run.getNumber(), previousResultFile);
+
+				// For the run view we only display the latest 2 runs (currently)
+				return;
+			}
+		}
 	}
 
 	@Override
