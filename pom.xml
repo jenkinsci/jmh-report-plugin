@@ -53,6 +53,12 @@
       <artifactId>job-dsl</artifactId>
       <version>1.64</version>
       <optional>true</optional>
+      <exclusions>
+        <exclusion>
+          <groupId>org.codehaus.groovy</groupId>
+          <artifactId>groovy-all</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 
