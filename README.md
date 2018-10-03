@@ -32,6 +32,27 @@ node {
 
 ![post-build action](https://wiki.jenkins.io/download/attachments/133956211/jmh-report-configuration.png?version=1&modificationDate=1501507215532&api=v2)
 
+## As a Job-DSL-Plugin
+
+```jmhReport { resultPath('build/reports/jmh/result.json') }```
+
+A complete job-dsl example could look like that:
+```
+job('example-1') {
+    steps {
+        scm {
+            git("https://github.com/ben-manes/caffeine.git", "master")
+        }
+        shell('./gradlew jmh -PincludePattern=".*DelegationBenchmark.*"')
+        publishers {
+            jmhReport {
+                resultPath('build/reports/jmh/result.json')
+            }
+        }
+    }
+}
+```
+
 # Building the project
 
 - Setup project for eclipse: ```mvn -DdownloadSources=true eclipse:eclipse ```
