@@ -1,11 +1,5 @@
 package io.morethan.jenkins.jmhreport;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.jenkinsci.Symbol;
-import org.kohsuke.stapler.DataBoundConstructor;
-
 import hudson.AbortException;
 import hudson.Extension;
 import hudson.FilePath;
@@ -19,24 +13,43 @@ import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 import jenkins.tasks.SimpleBuildStep;
+import org.jenkinsci.Symbol;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * A {@link Recorder} executed after each build. It copies the JMH result file
- * into the corresponding build dir and registers the {@link ProjectJmhView}
- * which renders the build run report and itself registers the
- * {@link ProjectJmhView} through {@link LastBuildAction}.
+ * into the corresponding build dir.
  */
 public class RunPublisher extends Recorder implements SimpleBuildStep {
 
-	private final String _resultPath;
+	private String _resultPath;
 
-	@DataBoundConstructor
-	public RunPublisher(String resultPath) {
-		_resultPath = resultPath;
-	}
+	private String _reportName;
 
 	public String getResultPath() {
 		return _resultPath;
+	}
+
+	@DataBoundConstructor
+	public RunPublisher() {
+	}
+
+	@DataBoundSetter
+	public void setResultPath(String resultPath) {
+		_resultPath = resultPath;
+	}
+
+	public String getReportName() {
+		return _reportName;
+	}
+
+	@DataBoundSetter
+	public void setReportName(String reportName) {
+		_reportName = reportName;
 	}
 
 	@Override
@@ -62,11 +75,11 @@ public class RunPublisher extends Recorder implements SimpleBuildStep {
 		listener.getLogger().println("Found JMH result: " + _resultPath);
 
 		// Copy the result file into the build dir of the Jenkins project
-		File archivedResult = new File(run.getRootDir(), Constants.ARCHIVED_RESULT_FILE);
+		File archivedResult = new File(run.getRootDir(), Archive.resultFileName(_reportName));
 		resultFile.copyTo(new FilePath(archivedResult));
 		listener.getLogger().println("Archived JMH result to: " + archivedResult);
 
-		run.addAction(new RunJmhView(run));
+		run.addAction(new RunJmhView(run, getReportName()));
 		// TODO set on major decreases ?
 		// build.setResult(Result.UNSTABLE);
 	}

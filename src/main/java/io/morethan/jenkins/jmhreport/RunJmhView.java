@@ -3,8 +3,7 @@ package io.morethan.jenkins.jmhreport;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.*;
 
 import javax.servlet.ServletException;
 
@@ -25,14 +24,16 @@ import jenkins.tasks.SimpleBuildStep.LastBuildAction;
  */
 public class RunJmhView implements Action, LastBuildAction, Serializable {
 
-	private static final String URL_NAME = "jmh-run-report";
+	static final String URL_NAME = "jmh-run-report";
 
 	private static final long serialVersionUID = 1L;
 
 	private final Run<?, ?> _run;
+	private final String _reportName;
 
-	public RunJmhView(Run<?, ?> run) {
+	public RunJmhView(Run<?, ?> run, String reportName) {
 		_run = run;
+		_reportName = reportName;
 	}
 
 	/**
@@ -46,12 +47,12 @@ public class RunJmhView implements Action, LastBuildAction, Serializable {
 
 	@Override
 	public String getDisplayName() {
-		return "JMH Run Report";
+		return Archive.runDisplayName(_reportName);
 	}
 
 	@Override
 	public String getUrlName() {
-		return URL_NAME;
+		return Archive.runUrl(_reportName);
 	}
 
 	public Run<?, ?> getRun() {
@@ -72,7 +73,7 @@ public class RunJmhView implements Action, LastBuildAction, Serializable {
 
 	public String getProvidedJsUrl() {
 		String contextPath = Stapler.getCurrentRequest().getContextPath();
-		return new StringBuilder(contextPath).append("/").append(getRun().getUrl()).append(URL_NAME)
+		return new StringBuilder(contextPath).append("/").append(getRun().getUrl()).append(getUrlName())
 				.append("/provided-").append(getBuildNumber()).append(".js").toString();
 	}
 
@@ -84,30 +85,27 @@ public class RunJmhView implements Action, LastBuildAction, Serializable {
 	public void doDynamic(final StaplerRequest request, final StaplerResponse response)
 			throws IOException, ServletException {
 		ProvidedJsBuilder jsBuilder = new ProvidedJsBuilder();
-		File resultFile = new File(_run.getRootDir(), Constants.ARCHIVED_RESULT_FILE);
+		File resultFile = new File(_run.getRootDir(), Archive.resultFileName(_reportName));
 		jsBuilder.addRun(getBuildNumber(), resultFile);
 
-		addPossiblePreviousBuild(jsBuilder, _run);
+		addPossiblePreviousBuild(jsBuilder, _run, _reportName);
 
 		response.setContentType("text/javascript;charset=UTF-8");
 		response.getWriter().println(jsBuilder.buildReverse());
 	}
 
-	private static void addPossiblePreviousBuild(ProvidedJsBuilder jsBuilder, Run<?, ?> run) {
-		while ((run = run.getPreviousNotFailedBuild()) != null) {
-			File previousResultFile = new File(run.getRootDir(), Constants.ARCHIVED_RESULT_FILE);
+	private static void addPossiblePreviousBuild(ProvidedJsBuilder jsBuilder, Run<?, ?> run, String reportName) {
+	    int runCount = 0;
+		while ((run = run.getPreviousNotFailedBuild()) != null && runCount++ < 10) {
+			File previousResultFile = new File(run.getRootDir(), Archive.resultFileName(reportName));
 			if (previousResultFile.exists()) {
 				jsBuilder.addRun(run.getNumber(), previousResultFile);
-
-				// For the run view we only display the latest 2 runs (currently)
-				return;
 			}
 		}
 	}
 
 	@Override
 	public Collection<? extends Action> getProjectActions() {
-		return Arrays.asList(new ProjectJmhView(_run.getParent()));
+		return new ArrayList<>();
 	}
-
 }
