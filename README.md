@@ -22,7 +22,7 @@ OR
 A complete pipeline could look like that:
 ```
 node {
-    checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/ben-manes/caffeine.git']]])
+    checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/ben-manes/caffeine.git']]])
     sh './gradlew jmh -PincludePattern=".*DelegationBenchmark.*"'
     jmhReport 'caffeine/build/reports/jmh/results.json'
 }
