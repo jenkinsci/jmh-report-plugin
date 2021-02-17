@@ -6,4 +6,7 @@
   <f:entry title="JMH result path" field="resultPath">
     <f:textbox default="build/reports/jmh/result.json"/>
   </f:entry>
+  <f:entry title="JMH report name" field="reportName">
+    <f:textbox default="benchmark"/>
+  </f:entry>
 </j:jelly>

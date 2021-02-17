@@ -11,6 +11,8 @@ public class JmhPublisherDslExtension extends ContextExtensionPoint
 	@DslExtensionMethod(context=PublisherContext.class)
 	public Object jmhPublisher(String resultPath)
 	{
-		return new RunPublisher(resultPath);
+		RunPublisher runPublisher = new RunPublisher();
+		runPublisher.setResultPath(resultPath);
+		return runPublisher;
 	}
 }
