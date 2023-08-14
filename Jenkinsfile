@@ -1,3 +1,3 @@
-#!groovy
-
-buildPlugin(jenkinsVersions: [null, '2.60.1'], failFast: false)
+buildPlugin(useContainerAgent: true, failFast: false, configurations: [
+  [ platform: 'linux', jdk: '8' ],
+])
